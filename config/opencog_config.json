@@ -1,0 +1,33 @@
+{
+  "opencog_config": {
+    "enable_learning": true,
+    "memory_persistence": true,
+    "knowledge_file": "opencog_knowledge.json",
+    "attention_allocation": {
+      "base_attention": 0.1,
+      "max_attention": 1.0,
+      "decay_rate": 0.95
+    },
+    "concept_extraction": {
+      "min_word_length": 3,
+      "max_concepts_per_text": 20,
+      "truth_value_threshold": 0.5
+    },
+    "relationship_learning": {
+      "similarity_threshold": 0.6,
+      "inheritance_confidence": 0.8,
+      "max_relationship_depth": 3
+    }
+  },
+  "llama_config": {
+    "temperature": 0.8,
+    "top_p": 0.99,
+    "max_gen_len": 256,
+    "seed": 42
+  },
+  "demo_mode": {
+    "enable_cognitive_insights": true,
+    "show_knowledge_stats": true,
+    "verbose_learning": false
+  }
+}
