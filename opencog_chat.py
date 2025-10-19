@@ -165,8 +165,9 @@ class OpenCogLLaMAServer:
             return self.opencog_chatbot.enhanced_chat_step(user_input)
         else:
             # Use basic LLaMA processing
-            # This would integrate with the original chat method
-            response = f"[Basic LLaMA response to: {user_input}]"
+            # TODO: Integrate with the original chat method from base_chatbot
+            # For demonstration, we return a placeholder indicating basic mode
+            response = f"[Basic LLaMA mode - would process: {user_input[:50]}...]"
             return {'response': response}
     
     def _display_cognitive_insights(self, response_data: Dict[str, Any]):

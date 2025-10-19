@@ -324,7 +324,7 @@ class AtomSpace:
             }
             
             if isinstance(atom, Link):
-                atom_data['outgoing'] = [a.uuid for a in atom.outgoing]
+                atom_data['outgoing'] = [a.uuid for a in atom.get_outgoing()]
             
             atoms_data.append(atom_data)
         

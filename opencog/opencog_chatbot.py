@@ -19,6 +19,10 @@ class OpenCogChatLLaMA:
     for improved reasoning, memory, and learning capabilities.
     """
     
+    # Configuration constants
+    MAX_CONVERSATION_HISTORY = 10
+    MAX_ACTIVE_CONCEPTS = 20
+    
     def __init__(self, base_chatbot, enable_learning: bool = True, 
                  memory_persistence: bool = True, knowledge_file: Optional[str] = None):
         """
@@ -112,9 +116,8 @@ class OpenCogChatLLaMA:
         context = self._analyze_input_context(user_input)
         
         # Generate base response using original ChatLLaMA
-        # Note: This would normally call the base chatbot's generation method
-        # For now, we'll simulate a response since we don't have the full model
-        base_response = self._simulate_llama_response(user_input, context)
+        # TODO: Integrate with actual base_chatbot.chat() method
+        base_response = self._generate_llama_response(user_input, context)
         
         # Enhance response with OpenCog knowledge
         enhancement = self.cognitive_primitives.enhance_response_with_knowledge(
@@ -206,19 +209,19 @@ class OpenCogChatLLaMA:
         
         return context
     
-    def _simulate_llama_response(self, user_input: str, context: Dict[str, Any]) -> str:
+    def _generate_llama_response(self, user_input: str, context: Dict[str, Any]) -> str:
         """
-        Simulate LLaMA response (in real implementation, this would call the actual model).
+        Generate LLaMA response (interfaces with actual model when available).
         
         Args:
             user_input: User's input
             context: Analyzed context
             
         Returns:
-            Simulated response
+            Model response (simulated in demo mode)
         """
-        # This is a placeholder - in real implementation, this would interface
-        # with the actual ChatLLaMA instance
+        # TODO: Interface with actual ChatLLaMA instance here
+        # For now, providing intelligent placeholder responses based on context
         
         if context.get('question_type') == 'what':
             return f"Based on my understanding, the concept you're asking about relates to several areas in my knowledge base. Let me explain what I know about this topic."
@@ -330,14 +333,14 @@ class OpenCogChatLLaMA:
                 updated_context['active_concepts'].append(concept.name)
         
         # Keep only the most recent/important concepts
-        if len(updated_context['active_concepts']) > 20:
+        if len(updated_context['active_concepts']) > self.MAX_ACTIVE_CONCEPTS:
             # Sort by importance and keep top concepts
             concept_importance = [
                 (name, self.cognitive_primitives.calculate_concept_importance(name))
                 for name in updated_context['active_concepts']
             ]
             concept_importance.sort(key=lambda x: x[1], reverse=True)
-            updated_context['active_concepts'] = [name for name, _ in concept_importance[:20]]
+            updated_context['active_concepts'] = [name for name, _ in concept_importance[:self.MAX_ACTIVE_CONCEPTS]]
         
         return updated_context
     
@@ -358,7 +361,7 @@ class OpenCogChatLLaMA:
             knowledge_data = {
                 'atomspace_data': self.atomspace.to_dict(),
                 'session_stats': self.session_stats,
-                'conversation_history': self.conversation_history[-10:],  # Keep recent history
+                'conversation_history': self.conversation_history[-self.MAX_CONVERSATION_HISTORY:],  # Keep recent history
                 'current_context': self.current_context,
                 'save_timestamp': time.time()
             }

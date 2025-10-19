@@ -21,6 +21,20 @@ class CognitivePrimitives:
     to enhance LLM reasoning and knowledge management.
     """
     
+    # Configuration constants
+    STOP_WORDS = {
+        'the', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 
+        'with', 'by', 'is', 'are', 'was', 'were', 'be', 'been', 'have', 
+        'has', 'had', 'do', 'does', 'did', 'will', 'would', 'could', 
+        'should', 'may', 'might', 'can', 'must'
+    }
+    
+    # Importance calculation weights
+    ATTENTION_WEIGHT = 0.4
+    TRUTH_WEIGHT = 0.3
+    CONNECTION_WEIGHT = 0.3
+    MAX_CONNECTIONS_NORMALIZE = 10.0
+    
     def __init__(self, atomspace: AtomSpace):
         """
         Initialize cognitive primitives with an AtomSpace.
@@ -52,9 +66,7 @@ class CognitivePrimitives:
         words = re.findall(r'\b[A-Za-z]+\b', text.lower())
         
         # Filter for potential concepts (words > 2 chars, not common stop words)
-        stop_words = {'the', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by', 'is', 'are', 'was', 'were', 'be', 'been', 'have', 'has', 'had', 'do', 'does', 'did', 'will', 'would', 'could', 'should', 'may', 'might', 'can', 'must'}
-        
-        concept_words = [word for word in words if len(word) > 2 and word not in stop_words]
+        concept_words = [word for word in words if len(word) > 2 and word not in self.STOP_WORDS]
         
         # Create concept nodes
         for word in set(concept_words):  # Remove duplicates
@@ -215,9 +227,9 @@ class CognitivePrimitives:
         connection_count = len(concept.incoming_set)
         
         # Weighted importance score
-        importance = (attention_score * 0.4 + 
-                     truth_score * 0.3 + 
-                     min(connection_count / 10.0, 1.0) * 0.3)
+        importance = (attention_score * self.ATTENTION_WEIGHT + 
+                     truth_score * self.TRUTH_WEIGHT + 
+                     min(connection_count / self.MAX_CONNECTIONS_NORMALIZE, 1.0) * self.CONNECTION_WEIGHT)
         
         return min(importance, 1.0)
     
