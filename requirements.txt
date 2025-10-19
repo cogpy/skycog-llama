@@ -2,3 +2,6 @@ torch
 fairscale
 fire
 sentencepiece
+# Additional dependencies for OpenCog integration
+typing-extensions>=4.0.0
+pathlib
